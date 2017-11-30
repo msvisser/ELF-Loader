@@ -15,7 +15,7 @@ void dump_section_table(elf64_section_header_t *elf_section_headers, size_t sect
         printf("%3zu | ", index);
         printf("%20s | ", name);
         printf("%8s | ", ELF_SECTION_TYPE[section->type]);
-        printf("%c%c%c%c | ", 
+        printf("%c%c%c%c | ",
             (section->flags & ELF_FLAG_WRITE) ? 'W' : ' ',
             (section->flags & ELF_FLAG_ALLOC) ? 'A' : ' ',
             (section->flags & ELF_FLAG_EXEC) ? 'X' : ' ',
@@ -48,8 +48,8 @@ int main(int argc, const char **argv) {
         return 1;
     }
 
-    if (elf_header->file_class != ELF_CLASS_64 || 
-        elf_header->encoding != ELF_DATA_LITTLE) 
+    if (elf_header->file_class != ELF_CLASS_64 ||
+        elf_header->encoding != ELF_DATA_LITTLE)
     {
         fprintf(stderr, "This file is not 64bit little endian\n");
         return 1;
@@ -76,7 +76,7 @@ int main(int argc, const char **argv) {
     printf(">> Allocating sections memory and loading string and symbol tables\n");
     for (size_t index = 0; index < section_count; index++) {
         elf64_section_header_t *section = (elf_section_headers + index);
-    
+
         // If this section should allocate memory and is bigger than 0
         if ((section->flags & ELF_FLAG_ALLOC) && section->size > 0) {
             // Allocate memory, currenty RW so we can write to it
@@ -132,7 +132,7 @@ int main(int argc, const char **argv) {
             // Locate the symbol table for this relocation table
             elf64_section_header_t *section_symbol_table = (elf_section_headers + section->link);
             elf64_symbol_t *symbol_table = (elf64_symbol_t *)(section_symbol_table->address);
-            
+
             // Locate the string table for the symbol table
             elf64_section_header_t *section_string_table = (elf_section_headers + section_symbol_table->link);
             char *string_table = (char *)(section_string_table->address);
@@ -178,7 +178,7 @@ int main(int argc, const char **argv) {
     printf(">> Correcting memory protection\n");
     for (size_t index = 0; index < section_count; index++) {
         elf64_section_header_t *section = (elf_section_headers + index);
-    
+
         // Allocated sections are mmaped, but their permissions are incorrect
         if ((section->flags & ELF_FLAG_ALLOC) && section->size > 0) {
             // Calculate the correct permissions
@@ -199,11 +199,11 @@ int main(int argc, const char **argv) {
     void_func_t run_func;
     for (size_t index = 0; index < section_count; index++) {
         elf64_section_header_t *section = (elf_section_headers + index);
-    
+
         // Look in all symbol tables for the run function
         if (section->type == ELF_SECTION_SYMTAB) {
             elf64_symbol_t *symbol_table = (elf64_symbol_t *) section->address;
-            
+
             // Find the string table for this symbol table
             elf64_section_header_t *section_string_table = (elf_section_headers + section->link);
             char *string_table = (char *)(section_string_table->address);
@@ -226,7 +226,7 @@ int main(int argc, const char **argv) {
 
         if (run_func) break;
     }
-    
+
     // Call the run function from the object file
     if (run_func != NULL) {
         printf(">> Running run() function\n\n");
