@@ -1,7 +1,7 @@
 CROSS=$(HOME)/cross/x86_64-elf/bin
 
 CC=gcc
-CC_OPT=-Wall -Wextra
+CC_OPT=-Wall -Wextra -O2
 CC_CROSS=$(CROSS)/x86_64-elf-gcc
 CC_CROSS_OPT=$(CC_OPT) -ffreestanding -mcmodel=large -fno-asynchronous-unwind-tables
 
