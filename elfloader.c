@@ -23,7 +23,7 @@ void dump_section_table(elf64_section_header_t *elf_section_headers, size_t sect
         );
         printf("%6llx | ", section->offset);
         printf("%6llx | ", section->size);
-        printf("%016llx | ", section->address);
+        printf("%.16llx | ", section->address);
         printf("\n");
     }
 }
