@@ -151,6 +151,14 @@ int main(int argc, const char **argv) {
 
                     // Check that the symbol is defined in this file
                     if (symbol->section > 0) {
+                        // Print out which symbol is being relocated
+                        if (symbol->name_index) {
+                            printf("Relocating symbol: %s\n", symbol_name);
+                        } else {
+                            elf64_section_header_t *shstrtab = (elf_section_headers + elf_header->string_table_index);
+                            elf64_section_header_t *section = (elf_section_headers + symbol->section);
+                            printf("Relocating symbol: %s%+lld\n", ((char *)shstrtab->address) + section->name_index, entry->addend);
+                        }
                         // Calculate the location of the symbol
                         elf64_section_header_t *symbol_section = (elf_section_headers + symbol->section);
                         uint64_t symbol_value = symbol_section->address + symbol->value + entry->addend;
